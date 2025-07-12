@@ -1,4 +1,4 @@
-variable "Project_Name" {
+variable "Project_name" {
     default = "expense"
 }
 
@@ -6,27 +6,31 @@ variable "environment" {
     default = "dev"
   
 }
-
-variable "Common_tagss" {
-    default = {
-        Project = "expense"
-        Environment = "dev"
-        Terraform = "true"
-    }
-}
-
 variable "public_subnet_cidrs" {
-    default = ["10.0.1.0/24","10.0.2.0/24"]
+  default = ["10.0.11.0/24","10.0.12.0/24"]
 }
 
 variable "private_subnet_cidrs" {
-    default = ["10.0.11.0/24","10.0.12.0/24"]
-}
-
-variable "database_subnet_cidrs" {
     default = ["10.0.21.0/24","10.0.22.0/24"]
+  
 }
 
-variable "is_perring" {
-  default = true
+variable "data_subnet_cidrs" {
+    default = ["10.0.31.0/24","10.0.32.0/24"]
+  
+}
+
+variable "common_tags" {
+    default = {
+
+        Project="Expense"
+        Environment="dev"
+        terraform="true"
+    }
+  
+}
+
+variable "is_peering_required" {
+    default = true
+  
 }
