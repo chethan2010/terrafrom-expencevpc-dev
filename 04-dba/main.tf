@@ -3,7 +3,7 @@ module "db" {
   identifier = "${var.project_name}-${var.environment}" #expense-dev
 
   engine            = "mysql"
-  engine_version    = "8.4.5"
+  engine_version    = "8.0"
   instance_class    = "db.t3.micro"
   allocated_storage = 5
 
@@ -17,10 +17,10 @@ module "db" {
   db_subnet_group_name = data.aws_ssm_parameter.db_subnet_group_name.value
 
   # DB parameter group
-  family = "mysql8.4.5"
+  family = "mysql8.0" 
 
   # DB option group
-  major_engine_version = "8.4.5"
+  major_engine_version = "8.0"
 
   tags = merge(
     var.common_tags,
