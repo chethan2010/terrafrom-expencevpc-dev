@@ -1,10 +1,9 @@
 module "db" {
   source = "terraform-aws-modules/rds/aws"
-  version = "6.9.0"
   identifier = "${var.project_name}-${var.environment}" #expense-dev
 
   engine            = "mysql"
-  engine_version    = "8.0"
+  engine_version    = "8.4.5"
   instance_class    = "db.t3.micro"
   allocated_storage = 5
 
@@ -18,10 +17,10 @@ module "db" {
   db_subnet_group_name = data.aws_ssm_parameter.db_subnet_group_name.value
 
   # DB parameter group
-  family = "mysql8.0"
+  family = "mysql8.4.5"
 
   # DB option group
-  major_engine_version = "8.0"
+  major_engine_version = "8.4.5"
 
   tags = merge(
     var.common_tags,
@@ -31,7 +30,7 @@ module "db" {
   )
 
   manage_master_user_password = false
-  password = "ExpenseApp1"
+  password = "ExpenseApp12"
   skip_final_snapshot = true
 
   parameters = [
