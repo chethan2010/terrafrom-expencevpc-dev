@@ -30,15 +30,15 @@ module "frontend" {
   sg_name = "frontend"
 }
 
-# module "ansible" {
-#   source = "../../terraform-aws-securityGroups"
-#   project_name = var.project_name
-#   environment = var.environment
-#   sg_description = "SG for Ansible Instances"
-#   vpc_id = data.aws_ssm_parameter.vpc_id.value
-#   common_tags = var.common_tags
-#   sg_name = "ansible"
-# }
+module "ansible" {
+  source = "../../terraform-aws-securityGroups"
+  project_name = var.project_name
+  environment = var.environment
+  sg_description = "SG for Ansible Instances"
+  vpc_id = data.aws_ssm_parameter.vpc_id.value
+  common_tags = var.common_tags
+  sg_name = "ansible"
+}
 
 # module "app_alb" {
 #   source = "../../terraform-aws-securityGroups"
@@ -60,15 +60,15 @@ module "frontend" {
 #   sg_name = "web-alb"
 # }
 
-# module "bastion" {
-#   source = "../../terraform-aws-securityGroups"
-#   project_name = var.project_name
-#   environment = var.environment
-#   sg_description = "SG for Bastion Instances"
-#   vpc_id = data.aws_ssm_parameter.vpc_id.value
-#   common_tags = var.common_tags
-#   sg_name = "bastion"
-# }
+module "bastion" {
+  source = "../../terraform-aws-securityGroups"
+  project_name = var.project_name
+  environment = var.environment
+  sg_description = "SG for Bastion Instances"
+  vpc_id = data.aws_ssm_parameter.vpc_id.value
+  common_tags = var.common_tags
+  sg_name = "bastion"
+}
 
 # module "vpn" {
 #   source = "../../terraform-aws-securityGroups"
@@ -89,27 +89,27 @@ resource "aws_security_group_rule" "db_backend" {
   protocol          = "tcp"
   source_security_group_id = module.backend.sg_id # source is where you are getting traffic from
   security_group_id = module.db.sg_id
+}  
+
+
+resource "aws_security_group_rule" "db_bastion" {
+  type              = "ingress"
+  from_port         = 3306
+  to_port           = 3306
+  protocol          = "tcp"
+  source_security_group_id = module.bastion.sg_id # source is where you are getting traffic from
+  security_group_id = module.db.sg_id
 }
 
 
-# resource "aws_security_group_rule" "db_bastion" {
-#   type              = "ingress"
-#   from_port         = 3306
-#   to_port           = 3306
-#   protocol          = "tcp"
-#   source_security_group_id = module.bastion.sg_id # source is where you are getting traffic from
-#   security_group_id = module.db.sg_id
-# }
-
-
-# resource "aws_security_group_rule" "backend_ansible" {
-#   type              = "ingress"
-#   from_port         = 22
-#   to_port           = 22
-#   protocol          = "tcp"
-#   source_security_group_id = module.ansible.sg_id # source is where you are getting traffic from
-#   security_group_id = module.backend.sg_id
-# }
+resource "aws_security_group_rule" "backend_ansible" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  source_security_group_id = module.ansible.sg_id # source is where you are getting traffic from
+  security_group_id = module.backend.sg_id
+}
 
 # resource "aws_security_group_rule" "db_vpn" {
 #   type              = "ingress"
@@ -129,14 +129,14 @@ resource "aws_security_group_rule" "db_backend" {
 #   security_group_id = module.backend.sg_id
 # }
 
-# resource "aws_security_group_rule" "backend_bastion" {
-#   type              = "ingress"
-#   from_port         = 22
-#   to_port           = 22
-#   protocol          = "tcp"
-#   source_security_group_id = module.bastion.sg_id # source is where you are getting traffic from
-#   security_group_id = module.backend.sg_id
-# }
+resource "aws_security_group_rule" "backend_bastion" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  source_security_group_id = module.bastion.sg_id # source is where you are getting traffic from
+  security_group_id = module.backend.sg_id
+}
 
 # resource "aws_security_group_rule" "backend_vpn_ssh" {
 #   type              = "ingress"
@@ -192,14 +192,14 @@ resource "aws_security_group_rule" "db_backend" {
 #   security_group_id = module.frontend.sg_id
 # }
 
-# resource "aws_security_group_rule" "frontend_bastion" {
-#   type              = "ingress"
-#   from_port         = 22
-#   to_port           = 22
-#   protocol          = "tcp"
-#   source_security_group_id = module.bastion.sg_id # source is where you are getting traffic from
-#   security_group_id = module.frontend.sg_id
-# }
+resource "aws_security_group_rule" "frontend_bastion" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  source_security_group_id = module.bastion.sg_id # source is where you are getting traffic from
+  security_group_id = module.frontend.sg_id
+}
 
 # resource "aws_security_group_rule" "frontend_vpn" {
 #   type              = "ingress"
